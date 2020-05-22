@@ -23,6 +23,22 @@
 
     <body>
 
+        <nav class='navbar navbar-expand-md navbar-light bg-light border'>
+            <a class='navbar-brand' href='/'>GPA Calculator</a>
+            <button aria-controls='navbar' aria-expanded='false' aria-label='Toggle navigation' class='navbar-toggler' data-target='#navbar' data-toggle='collapse' type='button'>
+                <span class='navbar-toggler-icon'></span>
+            </button>
+            <div class='collapse navbar-collapse' id='navbar'>
+                    <ul class='navbar-nav mr-auto mt-2'>
+                        <li class='nav-item'><a class='nav-link' href='/articles'>Log In</a></li>
+                        <li class='nav-item'><a class='nav-link' href='/about'>Sign Up</a></li>
+                    </ul>
+            </div>
+            <!-- Dark theme-->
+            <button id='change-theme' onclick='toggleTheme();'>🌓</button>
+            <script src='/static/darkmode.js'></script>
+        </nav>
+
         <main class='container p-5'>
             {% block main %}{% endblock %}
         </main>
