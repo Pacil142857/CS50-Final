@@ -1,0 +1,52 @@
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+main .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+main
+{
+    /* scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* constrain images on small screens */
+    max-width: 100%;
+}
+
+.dark
+{
+    background-color: rgb(30, 30, 30);
+    color: #dddddd;
+}
+
+.light
+{
+    background-color: white;
+    color: black;
+}
+
+#change-theme
+{
+    border: none;
+    cursor:pointer;
+    outline:none;
+    background-color: transparent;
+    background-repeat:no-repeat;
+    overflow: hidden;
+    font-size: 24px;
+}
