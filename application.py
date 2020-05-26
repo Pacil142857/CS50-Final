@@ -4,6 +4,7 @@ import os
 import sqlite3
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
+from functools import wraps
 from hashlib import pbkdf2_hmac
 from tempfile import mkdtemp
 
@@ -57,6 +58,21 @@ def make_table(username):
 
 
 # Below is Flask stuff. Comment it out if you want to try something without the HTML.
+
+# This function allows me to require the user to be logged in
+def login_required(f):
+    '''
+    Decorate routes to require login.
+
+    http://flask.pocoo.org/docs/1.0/patterns/viewdecorators/
+    '''
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect("/login")
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 # No idea what any of this does
 app = Flask(__name__)
