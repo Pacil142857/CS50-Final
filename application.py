@@ -39,18 +39,14 @@ def check_uname(username):
     return False
 
 
-# Consider changing the below function to also add a user into the users table
-def make_table(username):
+# Make a GPA table for a user
+def make_table(uid):
     '''Makes a GPA table in the database for a user'''
-    # Double-check username
-    if not check_uname(username):
-        raise Exception('Username '+username+' isn\'t valid.')
-
     # Make the table and index for the class names
     conn = sqlite3.connect('gpa.db')
     c = conn.cursor()
-    c.execute('CREATE TABLE gpa_'+username+' (name TEXT NOT NULL, grade TEXT NOT NULL, bump NUMERIC DEFAULT 0, credits DEFAULT 1 NOT NULL);')
-    c.execute('CREATE INDEX gpa_classname'+username+' ON gpa_'+username+'("name");')
+    c.execute('CREATE TABLE gpa_'+uid+' (name TEXT NOT NULL, grade TEXT NOT NULL, bump NUMERIC DEFAULT 0, credits DEFAULT 1 NOT NULL);')
+    c.execute('CREATE INDEX gpa_classname'+uid+' ON gpa_'+uid+'("name");')
     conn.commit()
     conn.close()
 
@@ -207,14 +203,15 @@ def register():
 
         # Put user in the database
         c.execute('INSERT INTO users (username, password, salt) VALUES (?, ?, ?)', (request.form.get('username'), password, salt))
-        conn.commit()
-
         # Log in
         session['user_id'] = [i for i in c.execute('SELECT id FROM users WHERE username = ?;', (request.form.get('username'),))][0]
+
+        conn.commit()
         conn.close()
+
+        # Make a GPA table for the user
+        make_table(str(session['user_id'][0]))
 
         return redirect('/')
     else:
-        print(request.method)
-        print('hi')
         return render_template('register.html')
