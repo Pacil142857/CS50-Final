@@ -33,10 +33,8 @@ def check_pass(username, password):
 
 def check_uname(username):
     '''Makes sure the username won't cause a SQLi attack'''
-    # Check if all characters are alphanumeric (or underscores) and is at least 6 characters long.
-    # Also checks if at least one character is alphabetical
-    if all([c.isalnum() or c == '_' for c in username]) \
-    and len(username) >= 6 and any([c.isalpha() for c in username]):
+    # Check if all characters are alphanumeric (or underscores) and if at least one character is alphabetical
+    if all([c.isalnum() or c == '_' for c in username]) and any([c.isalpha() for c in username]):
         return True
     return False
 
@@ -162,3 +160,61 @@ def login():
     else:
         return render_template('login.html')
 
+
+# Log out
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/login')
+
+
+# Register
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    '''Register user'''
+    if request.method == 'POST':
+        # Ensure username was submitted
+        if not request.form.get('username'):
+            return apology('Must provide username')
+
+        # Ensure password was submitted
+        elif not request.form.get('password'):
+            return apology('Must provide password')
+
+        # Ensure confirmation and password are the same
+        elif request.form.get('confirmation') != request.form.get('password'):
+            return apology('Passwords must match')
+
+        # Ensure password has 8 characters and a number
+        elif not any([c for c in request.form.get('password') if c.isnumeric()]) or not any([c for c in request.form.get('password') if c.isalpha()]) or len(request.form.get('password')) < 8:
+            return apology('Password must have at least 8 characters, a number, and a letter')
+
+        # Ensure that username is good
+        elif not check_uname(request.form.get('username')):
+            return apology('Username must only contain alphanumeric characters or underscores. At least one character must be alphabetical.')
+
+
+        conn = sqlite3.connect('gpa.db')
+        c = conn.cursor()
+
+        for i in c.execute('SELECT username FROM users;'):
+            if i[0] == request.form.get('username'):
+                conn.commit()
+                conn.close()
+                return apology('Username already exists.')
+
+        password, salt = hash(request.form.get('password'))
+
+        # Put user in the database
+        c.execute('INSERT INTO users (username, password, salt) VALUES (?, ?, ?)', (request.form.get('username'), password, salt))
+        conn.commit()
+
+        # Log in
+        session['user_id'] = [i for i in c.execute('SELECT id FROM users WHERE username = ?;', (request.form.get('username'),))][0]
+        conn.close()
+
+        return redirect('/')
+    else:
+        print(request.method)
+        print('hi')
+        return render_template('register.html')
