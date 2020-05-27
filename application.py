@@ -105,7 +105,12 @@ def after_request(response):
 @app.route('/')
 @login_required
 def index():
-    return render_template('index.html')
+    conn = sqlite3.connect('gpa.db')
+    c = conn.cursor()
+    data = [i for i in c.execute(f'SELECT * FROM gpa_{str(session["user_id"][0])};')]
+    conn.close()
+
+    return render_template('index.html', data=data)
 
 
 @app.route('/login', methods=['GET', 'POST'])
