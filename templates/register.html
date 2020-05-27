@@ -5,16 +5,19 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/register" method="post">
-        <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+    <form action='/register' method='post'>
+        <div class='form-group'>
+            <input autocomplete='off' autofocus class='form-control' name='username' placeholder='Username' type='text'>
         </div>
-        <div class="form-group">
-            <input class="form-control" name="password" placeholder="Password" type="password">
+        <p style='font-size: small;'>Username can only contain alphanumeric characters and underscores.
+        At least one character must be alphabetical.</p>
+        <div class='form-group'>
+            <input class='form-control' name='password' placeholder='Password' type='password'>
         </div>
-        <div class="form-group">
-            <input class="form-control" name="confirmation" placeholder="Confirm password" type="password">
+        <div class='form-group'>
+        <p style='font-size: small;'>Password must have at least 8 characters, 1 number, and 1 letter</p>
+            <input class='form-control' name='confirmation' placeholder='Confirm password' type='password'>
         </div>
-        <button class="btn btn-primary" type="submit">Log In</button>
+        <button class='btn btn-primary' type='submit'>Log In</button>
     </form>
 {% endblock %}
