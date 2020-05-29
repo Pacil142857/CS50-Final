@@ -5,6 +5,29 @@
 {% endblock %}
 
 {% block main %}
+    <form action='/' method='post'>
+        <div class='form-group'>
+            <input autocomplete='off' autofocus class='form-control' name='classname' placeholder='Class Name' type='text'>
+            <select name='grade'>
+                <option>A+</option>
+                <option>A</option>
+                <option>A-</option>
+                <option>B+</option>
+                <option>B</option>
+                <option>B-</option>
+                <option>C+</option>
+                <option>C</option>
+                <option>C-</option>
+                <option>D+</option>
+                <option>D</option>
+                <option>D-</option>
+                <option>F</option>
+            </select>
+            <input autocomplete='off' autofocus class='form-control' name='bump' placeholder='Grade Bump' type='text' onkeypress='validate(event)'>
+            <input autocomplete='off' autofocus class='form-control' name='credits' placeholder='Credits' type='text' onkeypress='validate(event)'>
+            <button class='btn btn-primary' type='submit'>Add Class</button>
+        </div>
+    </form>
     <table class='table table-striped'>
         <thead>
             <th>Class Name</th>
