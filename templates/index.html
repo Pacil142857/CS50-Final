@@ -5,5 +5,30 @@
 {% endblock %}
 
 {% block main %}
-    Hello
+    <table class='table table-striped'>
+        <thead>
+            <th>Class Name</th>
+            <th>Grade</th>
+            <th>Quality Points</th>
+            <th>Grade bump</th>
+            <th>Credits</th>
+            <th>Total Quality Points</th>
+        </thead>
+
+        <tbody>
+            {% for t in data %}
+            <tr>
+                {% for item in t %}
+                    <td>{{ item }}</td>
+                {% endfor %}
+
+                {% if t[2] * t[4] != 0 %}
+                    <td>{{ t[2] * t[4] + t[3] }}</td>
+                {% else %}
+                    <td>0</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
