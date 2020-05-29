@@ -39,13 +39,12 @@ def check_uname(username):
     return False
 
 
-# Make a GPA table for a user
 def make_table(uid):
     '''Makes a GPA table in the database for a user'''
     # Make the table and index for the class names
     conn = sqlite3.connect('gpa.db')
     c = conn.cursor()
-    c.execute('CREATE TABLE gpa_'+uid+' (name TEXT NOT NULL, grade TEXT NOT NULL, bump NUMERIC DEFAULT 0, credits DEFAULT 1 NOT NULL);')
+    c.execute('CREATE TABLE gpa_'+uid+' (name TEXT NOT NULL, grade TEXT NOT NULL, qp NUMERIC NOT NULL, bump NUMERIC DEFAULT 0, credits DEFAULT 1 NOT NULL);')
     c.execute('CREATE INDEX gpa_classname'+uid+' ON gpa_'+uid+'("name");')
     conn.commit()
     conn.close()
@@ -107,7 +106,7 @@ def after_request(response):
 def index():
     conn = sqlite3.connect('gpa.db')
     c = conn.cursor()
-    data = [i for i in c.execute(f'SELECT * FROM gpa_{str(session["user_id"][0])};')]
+    data = [i for i in c.execute(f'SELECT * FROM gpa_{str(session["user_id"])};')]
     conn.close()
 
     return render_template('index.html', data=data)
