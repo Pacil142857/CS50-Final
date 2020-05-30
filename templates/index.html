@@ -7,7 +7,7 @@
 {% block main %}
     <form action='/' method='post'>
         <div class='form-group'>
-            <input autocomplete='off' autofocus class='form-control' name='classname' placeholder='Class Name' type='text'>
+            <input autocomplete='off' autofocus class='form-control' name='classname' placeholder='Class Name' type='text' required>
             <select name='grade'>
                 <option>A+</option>
                 <option>A</option>
@@ -23,8 +23,8 @@
                 <option>D-</option>
                 <option>F</option>
             </select>
-            <input autocomplete='off' autofocus class='form-control' name='bump' placeholder='Grade Bump' type='text' onkeypress='validate(event)'>
-            <input autocomplete='off' autofocus class='form-control' name='credits' placeholder='Credits' type='text' onkeypress='validate(event)'>
+            <input autocomplete='off' autofocus class='form-control' name='bump' placeholder='Grade Bump' type='text' onkeypress='validate(event)' required>
+            <input autocomplete='off' autofocus class='form-control' name='credits' placeholder='Credits' type='text' onkeypress='validate(event)' required>
             <button class='btn btn-primary' type='submit'>Add Class</button>
         </div>
     </form>
@@ -35,21 +35,19 @@
             <th>Quality Points</th>
             <th>Grade bump</th>
             <th>Credits</th>
-            <th>Total Quality Points</th>
+            <th>Weighted Quality Points</th>
         </thead>
 
         <tbody>
             {% for t in data %}
             <tr>
-                {% for item in t %}
+                {% for item in t[:2] %}
                     <td>{{ item }}</td>
                 {% endfor %}
-
-                {% if t[2] * t[4] != 0 %}
-                    <td>{{ t[2] * t[4] + t[3] }}</td>
-                {% else %}
-                    <td>0</td>
-                {% endif %}
+                    <td>{{ t[2] / t[4] }}</td>
+                {% for item in t[3:] %}
+                    <td>{{ item }}</td>
+                {% endfor %}
             </tr>
             {% endfor %}
         </tbody>
