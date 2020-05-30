@@ -44,20 +44,12 @@ def make_table(uid):
     # Make the table and index for the class names
     conn = sqlite3.connect('gpa.db')
     c = conn.cursor()
-    c.execute('CREATE TABLE gpa_'+uid+' (name TEXT NOT NULL, grade TEXT NOT NULL, qp NUMERIC NOT NULL, bump NUMERIC DEFAULT 0, credits DEFAULT 1 NOT NULL);')
+    c.execute('CREATE TABLE gpa_'+uid+' (name TEXT NOT NULL, grade TEXT NOT NULL, qp NUMERIC NOT NULL, bump NUMERIC DEFAULT 0 NOT NULL, credits DEFAULT 1 NOT NULL, wqp NUMERIC NOT NULL);')
     c.execute('CREATE INDEX gpa_classname'+uid+' ON gpa_'+uid+'("name");')
     conn.commit()
     conn.close()
 
 
-"""# testing delete this comment later
-conn = sqlite3.connect('gpa.db')
-c = conn.cursor()
-x = hash('gamer1')
-c.execute('INSERT INTO users (username, password, salt) VALUES (?, ?, ?)', ('admin1', x[0], x[1]))
-conn.commit()
-conn.close()
-"""
 # Below is Flask stuff. Comment it out if you want to try something without the HTML.
 
 # Allows me to require the user to be logged in
@@ -101,15 +93,42 @@ def after_request(response):
     return response
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
-    conn = sqlite3.connect('gpa.db')
-    c = conn.cursor()
-    data = [i for i in c.execute(f'SELECT * FROM gpa_{str(session["user_id"])};')]
-    conn.close()
+    if request.method == 'POST':
+        # Table for converting grades to quality points
+        qptable = {'A+': 4.3, 'A': 4.0, 'A-': 3.7, 'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+                   'C+': 2.3, 'C': 2.0, 'C-': 1.7, 'D+': 1.3, 'D': 1.0, 'D-': 0.7, 'F': 0.0}
+        # Get most of the data
+        data = {'class_name': request.form.get('classname'), 'grade': request.form.get('grade'),
+                'bump': float(request.form.get('bump')), 'credits': float(request.form.get('credits'))}
+        # Get quality points
+        data['qp'] = qptable[data['grade']] * data['credits']
 
-    return render_template('index.html', data=data)
+        # Get weighted quality points
+        # TODO: figure out if gpa bump is affected by credit multiplier
+        if data['qp'] != 0:
+            data['weightedqp'] = data['qp'] + data['bump']
+        else:
+            data['weightedqp'] = 0
+
+
+        # Put data in database
+        conn = sqlite3.connect('gpa.db')
+        c = conn.cursor()
+        c.execute('INSERT INTO gpa_'+str(session['user_id'])+' VALUES (?, ?, ?, ?, ?, ?);',
+                  (data['class_name'], data['grade'], data['qp'], data['bump'], data['credits'], data['weightedqp']))
+        conn.commit()
+        conn.close()
+        return redirect('/')
+    else:
+        conn = sqlite3.connect('gpa.db')
+        c = conn.cursor()
+        data = [i for i in c.execute(f'SELECT * FROM gpa_{str(session["user_id"])};')]
+        conn.close()
+
+        return render_template('index.html', data=data)
 
 
 @app.route('/login', methods=['GET', 'POST'])
