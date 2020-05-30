@@ -61,8 +61,8 @@ def login_required(f):
     '''
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if session.get("user_id") is None:
-            return redirect("/login")
+        if session.get('user_id') is None:
+            return redirect('/login')
         return f(*args, **kwargs)
     return decorated_function
 
@@ -125,7 +125,7 @@ def index():
     else:
         conn = sqlite3.connect('gpa.db')
         c = conn.cursor()
-        data = [i for i in c.execute(f'SELECT * FROM gpa_{str(session["user_id"])};')]
+        data = [i for i in c.execute(f'SELECT * FROM gpa_{str(session["user_id"])} ORDER BY name;')]
         conn.close()
 
         return render_template('index.html', data=data)
@@ -178,6 +178,34 @@ def login():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template('login.html')
+
+
+# Delete a class
+@app.route('/remove', methods=['GET', 'POST'])
+@login_required
+def remove():
+    if request.method == 'POST':
+        conn = sqlite3.connect('gpa.db')
+        c = conn.cursor()
+
+        # Delete the class
+        c.execute('DELETE FROM gpa_'+str(session['user_id'])+' WHERE name=?', (request.form.get('classname'),))
+        conn.commit()
+
+        conn.close()
+        return redirect('/')
+    else:
+        # Get list of classes
+        conn = sqlite3.connect('gpa.db')
+        c = conn.cursor()
+        classes = [i[0] for i in c.execute('SELECT name FROM gpa_'+str(session['user_id'])+' ORDER BY name')]
+        conn.close()
+
+        # Ensure user has classes to delete
+        if len(classes) == 0:
+            return apology('No classes to remove')
+
+        return render_template('/remove.html', classes=classes)
 
 
 # Log out
