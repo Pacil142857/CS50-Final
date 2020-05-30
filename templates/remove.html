@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Remove a Class
+{% endblock %}
+
+{% block main %}
+    <form action='/remove' method='post'>
+        <div class='form-group'>
+            <select name='classname'>
+                {% for i in classes %}
+                    <option>{{ i }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class='btn btn-primary' type='submit'>Remove class</button>
+    </form>
+{% endblock %}
