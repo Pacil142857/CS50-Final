@@ -103,13 +103,14 @@ def index():
         # Get most of the data
         data = {'class_name': request.form.get('classname'), 'grade': request.form.get('grade'),
                 'bump': float(request.form.get('bump')), 'credits': float(request.form.get('credits'))}
+
         # Get quality points
-        data['qp'] = qptable[data['grade']] * data['credits']
+        data['qp'] = qptable[data['grade']]
 
         # Get weighted quality points
         # TODO: figure out if gpa bump is affected by credit multiplier
         if data['qp'] != 0:
-            data['weightedqp'] = data['qp'] + data['bump']
+            data['weightedqp'] = data['qp'] * data['credits'] + data['bump']
         else:
             data['weightedqp'] = 0
 
@@ -128,7 +129,8 @@ def index():
         data = [i for i in c.execute(f'SELECT * FROM gpa_{str(session["user_id"])} ORDER BY name;')]
         conn.close()
 
-        return render_template('index.html', data=data)
+        total = sum([i[5] for i in data]) / sum([i[4] for i in data])
+        return render_template('index.html', data=data, total=total)
 
 
 @app.route('/login', methods=['GET', 'POST'])
