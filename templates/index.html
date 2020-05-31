@@ -44,12 +44,22 @@
                 {% for item in t[:2] %}
                     <td>{{ item }}</td>
                 {% endfor %}
-                    <td>{{ t[2] / t[4] }}</td>
+                    <td>{{ t[2] }}</td>
                 {% for item in t[3:] %}
                     <td>{{ item }}</td>
                 {% endfor %}
             </tr>
             {% endfor %}
+
+            <!-- Total -->
+            <tr>
+                <td>Total</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{ total }}</td>
+            </tr>
         </tbody>
     </table>
 {% endblock %}
