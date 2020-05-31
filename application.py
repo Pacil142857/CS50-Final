@@ -258,13 +258,13 @@ def register():
         # Put user in the database
         c.execute('INSERT INTO users (username, password, salt) VALUES (?, ?, ?)', (request.form.get('username'), password, salt))
         # Log in
-        session['user_id'] = [i for i in c.execute('SELECT id FROM users WHERE username = ?;', (request.form.get('username'),))][0]
+        session['user_id'] = [i for i in c.execute('SELECT id FROM users WHERE username = ?;', (request.form.get('username'),))][0][0]
 
         conn.commit()
         conn.close()
 
         # Make a GPA table for the user
-        make_table(str(session['user_id'][0]))
+        make_table(str(session['user_id']))
 
         return redirect('/')
     else:
