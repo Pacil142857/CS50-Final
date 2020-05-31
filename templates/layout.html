@@ -38,7 +38,9 @@
                         <li class='nav-item'><a class='nav-link' href='/register'>Sign Up</a></li>
                     </ul>
                 <ul class='nav navbar-nav navbar-right'>
-                    <li class='nav-item'><a class='nav-link' href='/remove'>Remove Class</a></li>
+                    {% if session.get('user_id') is not none %}
+                        <li class='nav-item'><a class='nav-link' href='/remove'>Remove Class</a></li>
+                    {% endif %}
                     <!-- Dark theme-->
                     <li class='nav-item'><button id='change-theme' onclick='toggleTheme();'>🌓</button></li>
                     <script src='/static/darkmode.js'></script>
