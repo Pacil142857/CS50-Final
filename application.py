@@ -124,10 +124,13 @@ def index():
     else:
         conn = sqlite3.connect('gpa.db')
         c = conn.cursor()
-        data = [i for i in c.execute(f'SELECT * FROM gpa_{str(session["user_id"])} ORDER BY name;')]
+        data = [i for i in c.execute('SELECT * FROM gpa_'+str(session['user_id'])+' ORDER BY name;')]
         conn.close()
 
-        total = sum([i[5] for i in data]) / sum([i[4] for i in data])
+        if sum([i[4] for i in data]) != 0:
+            total = sum([i[5] for i in data]) / sum([i[4] for i in data])
+        else:
+            total = 0
         return render_template('index.html', data=data, total=round(total, 2))
 
 
