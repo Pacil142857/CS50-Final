@@ -33,19 +33,15 @@
             <th>Class Name</th>
             <th>Grade</th>
             <th>Quality Points</th>
-            <th>Grade bump</th>
+            <th>GPA bump</th>
             <th>Credits</th>
-            <th>Weighted Quality Points</th>
+            <th>Total Quality Points</th>
         </thead>
 
         <tbody>
             {% for t in data %}
             <tr>
-                {% for item in t[:2] %}
-                    <td>{{ item }}</td>
-                {% endfor %}
-                    <td>{{ t[2] }}</td>
-                {% for item in t[3:] %}
+                {% for item in t %}
                     <td>{{ item }}</td>
                 {% endfor %}
             </tr>
