@@ -30,12 +30,14 @@ main img
 
 .dark
 {
+    /* dark theme colors */
     background-color: rgb(30, 30, 30);
     color: #dddddd;
 }
 
 .light
 {
+    /* light theme colors */
     background-color: white;
     color: black;
 }

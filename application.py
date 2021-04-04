@@ -49,9 +49,6 @@ def make_table(uid):
     conn.commit()
     conn.close()
 
-
-# Below is Flask stuff. Comment it out if you want to try something without the HTML.
-
 # Allows me to require the user to be logged in
 def login_required(f):
     '''
@@ -73,7 +70,7 @@ def apology(message, code=400):
     return render_template('apology.html', top=code, bottom=message), code
 
 
-# No idea what any of this does
+# Create the Flask app
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
@@ -105,7 +102,6 @@ def index():
                 'bump': float(request.form.get('bump')), 'credits': float(request.form.get('credits'))}
 
         # Get weighted quality points
-        # TODO: figure out if gpa bump is affected by credit multiplier
         if data['grade'] != 'F':
             data['qp'] = qptable[data['grade']] + data['bump']
             data['weightedqp'] = data['qp'] * data['credits']
@@ -146,8 +142,8 @@ def login():
             return apology('Must provide username')
 
         # Ensure password was submitted
-        elif not request.form.get("password"):
-            return apology("Must provide password")
+        elif not request.form.get('password'):
+            return apology('Must provide password')
 
         conn = sqlite3.connect('gpa.db')
         c = conn.cursor()
@@ -180,10 +176,11 @@ def login():
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
+        # Render the login page
         return render_template('login.html')
 
 
-# Delete a class
+# Delete a class (Not the programming class—the education class)
 @app.route('/remove', methods=['GET', 'POST'])
 @login_required
 def remove():
@@ -239,7 +236,7 @@ def register():
         elif not any([c for c in request.form.get('password') if c.isnumeric()]) or not any([c for c in request.form.get('password') if c.isalpha()]) or len(request.form.get('password')) < 8:
             return apology('Password must have at least 8 characters, a number, and a letter')
 
-        # Ensure that username is good
+        # Ensure that username is valid
         elif not check_uname(request.form.get('username')):
             return apology('Username must only contain alphanumeric characters or underscores. At least one character must be alphabetical.')
 

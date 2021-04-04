@@ -1,6 +1,5 @@
-// It works
-// Don't touch it
 
+// Set the theme to dark/light
 function setTheme(themeName)
 {
     if (themeName === 'dark')
@@ -17,6 +16,7 @@ function setTheme(themeName)
     }
 }
 
+// Change the theme when the user presses the toggle theme button
 function toggleTheme()
 {
     if (localStorage.getItem('theme') === 'dark')
@@ -41,7 +41,7 @@ function toggleTheme()
     }
 }) ();
 
-// Sure hope this works
+
 function validate(evt)
 {
   var theEvent = evt || window.event;
